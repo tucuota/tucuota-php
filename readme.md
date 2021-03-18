@@ -10,17 +10,8 @@
 Via Composer
 
 ``` bash
+$ composer config repositories.repo git git@github.com:tucuota/tucuota-php.git
 $ composer require tucuota/tucuota-php
-```
-
-Or as a dependency in your project's composer.json:
-
-```json
-{
-    "require": {
-        "tucuota/tucuota-php": "0.1"
-    }
-}
 ```
 
 <a name="setup"></a>
