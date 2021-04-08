@@ -43,7 +43,7 @@ class TuCuota
             'User-Agent' => 'tucuota-php-client/1.0',
         ];
         $this->base_uri = $environment == 'production' ?
-            'https://www.tucuota.com/api/' :
+            'https://tucuota.com/api/' :
             'https://sandbox.tucuota.com/api/';
     }
 
