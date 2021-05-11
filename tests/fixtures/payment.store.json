@@ -1,0 +1,48 @@
+ {
+    "data": {
+        "id": "PYnZRPX89R0V",
+        "object": "payment",
+        "amount": 100,
+        "currency": "ARS",
+        "description": "Unique payment",
+        "status": "pending_submission",
+        "response_message": "",
+        "paid": false,
+        "retryable": false,
+        "livemode": false,
+        "created_at": "2019-11-27T17:30:42-0300",
+        "charge_date": "2019-11-27",
+        "effective_charged_date": null,
+        "estimated_accreditation_date": null,
+        "updated_at": "2019-11-27T17:30:42-0300",
+        "updated_status": null,
+        "customer": {
+            "id": "CSr7Dg3LkDP2",
+            "object": "customer",
+            "name": "John",
+            "email": "john@doe.com",
+            "identification_type": "",
+            "identification_number": "",
+            "mobile_number": "",
+            "metadata": null,
+            "livemode": false,
+            "updated_at": "2019-11-27T17:28:33-0300",
+            "created_at": "2019-11-27T17:28:33-0300",
+            "deleted_at": null
+        },
+        "subscription": null,
+        "subscription_payment_number": null,
+        "gateway": "GW1L49Jr79RW",
+        "payment_method": {
+            "id": "PMPVWR55pkgj",
+            "object": "payment_method",
+            "last_four_digits": "2104",
+            "brand": "visa-credito",
+            "bank": "",
+            "livemode": false,
+            "updated_at": "2019-11-27T17:28:33-0300",
+            "created_at": "2019-11-27T17:28:33-0300"
+        },
+        "metadata": null
+    }
+}

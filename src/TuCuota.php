@@ -9,6 +9,7 @@ use TuCuota\Exceptions\TucuotaRequestException;
 use TuCuota\Exceptions\TuCuotaConnectionException;
 use TuCuota\Exceptions\TucuotaPermissionsException;
 use TuCuota\Exceptions\TucuotaException;
+use TuCuota\Exceptions\TuCuotaNotFoundResource;
 
 /**
  * Class TuCuota.
@@ -26,6 +27,7 @@ class TuCuota
     public $environment;
     public $headers;
     public $base_uri;
+    public $client;
 
     public function __construct(string $apiKey, string $environment = 'production')
     {
@@ -45,17 +47,17 @@ class TuCuota
         $this->base_uri = $environment == 'production' ?
             'https://tucuota.com/api/' :
             'https://sandbox.tucuota.com/api/';
+
+        $this->client = new Client([
+                'base_uri' => $this->base_uri,
+                'timeout'  => 15.0,
+            ]);
     }
 
     public function request(string $method, string $uri, array $data = [])
     {
-        $client = new Client([
-            'base_uri' => $this->base_uri,
-            'timeout'  => 15.0,
-        ]);
-
         try {
-            $request = $client->request($method, $uri, [
+            $request = $this->client->request($method, $uri, [
                 'headers' => $this->headers,
                 $method == 'GET' ? 'query' : 'json' => $data
             ]);
@@ -72,11 +74,14 @@ class TuCuota
                 case 403:
                     throw new TucuotaPermissionsException("Forbidden. Verify API key and environment");
 
-                default:
-                    $body = json_decode($e->getResponse()->getBody());
+                case 404:
+                    throw new TuCuotaNotFoundResource("Resource not found");
 
-                    $message = property_exists($body, "message") ? $body->message : Null;
-                    $errors = property_exists($body, "errors") ? $body->errors : Null;
+                default:
+                    $body = json_decode($e->getResponse()->getBody(), true);
+
+                    $message = array_key_exists("message", $body) ? $body["message"] : Null;
+                    $errors = array_key_exists("errors", $body) ? $body["errors"] : Null;
 
                     throw new TucuotaRequestException("$status: $message. $errors");
             }
@@ -85,10 +90,11 @@ class TuCuota
         try {
             $response = [];
 
-            $body = json_decode($request->getBody());
+            $body = json_decode($request->getBody(), true);
             $response['status'] = $request->getStatusCode();
-            $response['data'] = property_exists($body, "data") ? $body->data : Null;
-            $response['meta'] = property_exists($body, "meta") ? $body->meta : Null;
+            $response['message'] = array_key_exists("message", $body) ? $body["message"] : Null;
+            $response['data'] = array_key_exists("data", $body) ? $body["data"] : Null;
+            $response['meta'] = array_key_exists("meta", $body) ? $body["meta"] : Null;
 
             return $response;
 
