@@ -20,7 +20,7 @@ $ composer require tucuota/tucuota-php
 ### Configure your credentials
 
 * Get your **API_TOKEN** in the following address:
-    * Production: https://www.tucuota.com/dashboard/developers
+    * Production: https://tucuota.com/dashboard/developers
     * Sandbox: https://sandbox.tucuota.com/dashboard/developers
 
 ```php

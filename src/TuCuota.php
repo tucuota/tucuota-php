@@ -34,8 +34,8 @@ class TuCuota
             throw new TucuotaException("Invalid environment");
         }
 
+        $this->environment = $environment;
         $this->apiKey = $apiKey;
-        $this->apiKey = $environment;
         $this->headers = [
             "Authorization" => "Bearer " . $apiKey,
             "Content-Type" =>  "application/json",
@@ -73,20 +73,25 @@ class TuCuota
                     throw new TucuotaPermissionsException("Forbidden. Verify API key and environment");
 
                 default:
-                    $message = json_decode($e->getResponse()->getBody())->message;
-                    $errors = json_decode($e->getResponse()->getBody())->errors;
-                    $errors = json_encode($errors);
+                    $body = json_decode($e->getResponse()->getBody());
+
+                    $message = property_exists($body, "message") ? $body->message : Null;
+                    $errors = property_exists($body, "errors") ? $body->errors : Null;
 
                     throw new TucuotaRequestException("$status: $message. $errors");
             }
         }
 
         try {
-            return [
-                'status' => $request->getStatusCode(),
-                'data' => json_decode($request->getBody(), true)['data'],
-                'meta' => json_decode($request->getBody(), true)['meta'],
-            ];
+            $response = [];
+
+            $body = json_decode($request->getBody());
+            $response['status'] = $request->getStatusCode();
+            $response['data'] = property_exists($body, "data") ? $body->data : Null;
+            $response['meta'] = property_exists($body, "meta") ? $body->meta : Null;
+
+            return $response;
+
         } catch (\Throwable $th) {
             throw new TucuotaException("Malformed response: " . $request->getBody());
         }
